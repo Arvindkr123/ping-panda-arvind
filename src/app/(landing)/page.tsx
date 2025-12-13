@@ -1,8 +1,8 @@
 import React from "react"
-import MaxWidthWrapper from "./components/max-width_wrapper"
-import Heading from "./components/heading"
+import MaxWidthWrapper from "@/app/components/max-width_wrapper"
+import Heading from "@/app/components/heading"
 import { Check } from "lucide-react"
-import { ShinyButton } from "./components/shiny-button"
+import { ShinyButton } from "@/app/components/shiny-button"
 
 const Home = () => {
   return (
