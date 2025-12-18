@@ -1,15 +1,15 @@
 import React from "react"
-import MaxWidthWrapper from "@/app/components/max-width_wrapper"
-import Heading from "@/app/components/heading"
+import MaxWidthWrapper from "@/components/max-width_wrapper"
+import Heading from "@/components/heading"
 import { Check, Star } from "lucide-react"
-import { ShinyButton } from "@/app/components/shiny-button"
-import { MockDiscordUI } from "../components/mock-discord-ui"
+import { ShinyButton } from "@/components/shiny-button"
+import { MockDiscordUI } from "../../components/mock-discord-ui"
 import { AnimatedList, AnimatedListItem } from "@/components/ui/animated-list"
-import { DiscordMessage } from "../components/discord-message"
+import { DiscordMessage } from "../../components/discord-message"
 import Image from "next/image"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
-import { Icons } from "../components/icons"
+import { Icons } from "../../components/icons"
 
 const Home = () => {
 

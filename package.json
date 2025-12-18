@@ -32,7 +32,19 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "wrangler": "^3.72.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@discordjs/rest": "^2.4.0",
+    "@hookform/resolvers": "^3.9.0",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-tabs": "^1.1.1",
+    "@tanstack/react-table": "^8.20.5",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^11.11.9",
+    "react-hook-form": "^7.53.0",
+    "stripe": "^17.2.0",
+    "vaul": "^1.1.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240815.0",

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Navbar } from '@/app/components/navbar'
+import { Navbar } from '@/components/navbar'
 
 const layout = ({ children }: { children: ReactNode }) => {
     return (

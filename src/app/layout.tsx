@@ -4,7 +4,7 @@ import { EB_Garamond } from "next/font/google"
 import { cn } from "@/utils"
 
 import "./globals.css"
-import { Providers } from "@/app/components/providers"
+import { Providers } from "@/components/providers"
 import { ClerkProvider } from "@clerk/nextjs"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
