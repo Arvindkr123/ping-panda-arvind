@@ -3,14 +3,16 @@ import { LoadingSpinner } from '@/components/LoadingSpinner'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Modal } from '@/components/ui/modal'
 import { client } from '@/lib/client'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { format, formatDistanceToNow } from 'date-fns'
 import { ArrowRight, BarChart, BarChart2, Clock, Database, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { DashboardEmptyState } from './dashboard-empty-state'
 
 export const DashboardPageContent = () => {
     const [deleteCategory, setDeleteCategory] = useState<string | null>(null);
+    const queryClient = useQueryClient();
     const { data: categories, isPending: isEventCategoriesLoading } = useQuery({
         queryKey: ['user-event-categories'],
         queryFn: async () => {
@@ -20,9 +22,15 @@ export const DashboardPageContent = () => {
         }
     })
 
-    const { } = useMutation({
-        mutationFn: async () => {
-
+    const { mutate: deleteCategoryMutation, isPending: isDeletingCategory } = useMutation({
+        mutationFn: async (name: string) => {
+            await client.category.deleteCategory.$post({ name })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['user-event-categories']
+            })
+            setDeleteCategory(null);
         }
     })
 
@@ -32,8 +40,9 @@ export const DashboardPageContent = () => {
         </div>
     }
 
-    if (!categories || categories.length === 0) {
-        <div className="">empty state</div>
+    
+    if (categories && categories?.length === 0) {
+        return <DashboardEmptyState/>
     }
 
     return (
@@ -122,8 +131,8 @@ export const DashboardPageContent = () => {
                         >
                             Cancel
                         </Button>
-                        <Button variant="destructive">
-                            Delete
+                        <Button variant="destructive" onClick={() => deleteCategory && deleteCategoryMutation(deleteCategory)} disabled={isDeletingCategory}>
+                            {isDeletingCategory ? "Deleting..." : "Delete"}
                         </Button>
                     </div>
                 </div>

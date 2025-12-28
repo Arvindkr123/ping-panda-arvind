@@ -1,0 +1,24 @@
+import { cn } from '@/utils'
+import React, { HTMLAttributes } from 'react'
+
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+    contentClassName?: string
+}
+
+const Card = ({ className, contentClassName, children, ...props }: CardProps) => {
+    return (
+        <div className={cn('relative rounded-lg bg-gray-50 text-card-foreground', className)} {
+                ...props
+            }>
+            <div className={cn('relative z-10 p-6', contentClassName)}>
+                {
+                    children
+                }
+            </div>
+            <div className="absolute z-0  inset-px rounded-lg bg-white"></div>
+            <div className="pointer-events-none z-0 absolute inset-px rounded-lg shadow-md ring-1 ring-black/5"></div>
+        </div>
+    )
+}
+
+export default Card
