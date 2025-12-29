@@ -1,0 +1,96 @@
+import Card from '@/components/card';
+import { client } from '@/lib/client';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const EmptyCategoryPage = ({ categoryName }: {
+    categoryName: string
+}) => {
+    const router = useRouter();
+
+    const { data } = useQuery({
+        queryKey: ["category", categoryName, "hasEvents"],
+        queryFn: async () => {
+            const res = await client.category.pollCategory.$get({
+                name: categoryName
+            })
+            return await res.json();
+        },
+        refetchInterval(query) {
+            return query.state.data?.hasEvents ? false : 1000
+        }
+    })
+
+    const hasEvents = data?.hasEvents;
+
+    useEffect(() => {
+        if (hasEvents) router.refresh();
+    }, [hasEvents, router])
+
+    const codeSnipet = `await fetch("http://localhost:3000/api/v1/events", {
+  method: "POST",
+  body: JSON.stringify({
+    category: "sale",
+    fields: {
+      plan: "PRO",
+      email: "zoe.martinez2001@email.com",
+      amount: 49.00
+    }
+  }),
+  headers: {
+    Authorization: "Bearer <YOUR_API_KEY>"
+  }
+})`
+
+    return (
+        <Card
+            contentClassName='max-w-2xl w-full flex flex-col items-center p-6'
+            className='flex-1 flex items-center justify-center'
+        >
+            <h2 className='text-xl/8 font-medium text-center tracking-tight text-gray-950'>
+                Create your first {categoryName} event
+            </h2>
+            <p className="text-sm/6 text-gray-600 mb-8 max-w-md text-center text-pretty">
+                Get started by sending a request to our tracking API:
+            </p>
+            <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="bg-gray-800 px-4 py-2 flex justify-between items-center">
+                    <div className="flex space-x-2">
+                        <div className="size-3 rounded-full bg-red-500"></div>
+                        <div className="size-3 rounded-full bg-yellow-500"></div>
+                        <div className="size-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span className="text-gray-400 text-sm">your-first-event.js</span>
+                </div>
+                <SyntaxHighlighter language='javascript' style={atomDark} customStyle={{
+                    borderRadius: '0px',
+                    margin: 0,
+                    padding: '1rem',
+                    fontSize: "0.875rem",
+                    lineHeight: "1.5"
+                }}>
+                    {codeSnipet}
+                </SyntaxHighlighter>
+            </div>
+            <div className="mt-8 flex flex-col  items-center space-x-2">
+                <div className="flex items-center gap-2">
+                    <div className="size-2 bg-green-500 rounded-full animate-pulse">
+                    </div>
+                    <span className="text-sm text-gray-600">Listening to incoming events...</span>
+                </div>
+                <p className="text-sm/6 text-gray-600 mt-2">Need help? Check out our {" "}<a href='#' className='text-blue-600 hover:underline'>
+                    documentation
+                </a>{" "} or {" "}
+                    <a href='#' className='text-blue-600 hover:underline'>
+                        contact support.
+                    </a>
+                </p>
+            </div>
+        </Card>
+    )
+}
+
+export default EmptyCategoryPage
