@@ -258,19 +258,19 @@ export const CategoryPageContent = ({ hasEvents: initialHasEvents, category }: C
                                         }
                                     </TableRow>
                                 )) : table.getRowModel().rows.length > 0 ? table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id}>
-                                    {
-                                        row.getVisibleCells().map((cell)=>{
-                                            return <TableCell key={cell.id}>
-                                                {
-                                                    flexRender(
-                                                        cell.column.columnDef.cell, cell.getContext()
-                                                    )
-                                                }
-                                            </TableCell>
-                                        })
-                                    }
-                                </TableRow>)) : <TableRow>
+                                    <TableRow key={row.id}>
+                                        {
+                                            row.getVisibleCells().map((cell) => {
+                                                return <TableCell key={cell.id}>
+                                                    {
+                                                        flexRender(
+                                                            cell.column.columnDef.cell, cell.getContext()
+                                                        )
+                                                    }
+                                                </TableCell>
+                                            })
+                                        }
+                                    </TableRow>)) : <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">
                                         No results.
                                     </TableCell>
@@ -279,6 +279,18 @@ export const CategoryPageContent = ({ hasEvents: initialHasEvents, category }: C
                         </TableBody>
                     </Table>
                 </Card>
+            </div>
+            <div className="flex items-center justify-end space-x-2 py-4">
+                <Button variant={'outline'} size={'sm'} onClick={() => table.previousPage()} disabled={
+                    !table.getCanPreviousPage() || isFetching
+                }>
+                    Previous
+                </Button>
+                <Button variant={'outline'} size={'sm'} onClick={() => table.nextPage()} disabled={
+                    !table.getCanNextPage() || isFetching
+                }>
+                    Next
+                </Button>
             </div>
         </div>
     </>
