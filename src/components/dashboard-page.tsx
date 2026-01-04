@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 import { Button } from './ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Heading from './heading';
-import { useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 interface DashboardPageProps {
     title: string;
     children?: ReactNode
@@ -14,17 +14,17 @@ export const DashboardPage = ({ title,
     children,
     hideBackButton,
     cta }: DashboardPageProps) => {
-
     const router = useRouter();
+    const pathname = usePathname()  
     return (
         <section className='flex-1 h-full w-full flex flex-col'>
             <div className="w-full p-6 sm:p-8 flex justify-between border-b bg-gray-200">
                 <div className="w-full flex flex-col sm:flex-row items-start sm:items-center gap-6">
                     <div className="flex items-center gap-8">
                         {
-                            hideBackButton ? null : <Button onClick={() => router.push("/dashboard")} className='bg-white w-fit' variant={'outline'}>
+                            pathname!=="/dashboard" ?  hideBackButton ? null : <Button onClick={() => router.push("/dashboard")} className='bg-white w-fit' variant={'outline'}>
                                 <ArrowLeft className='size-4' />
-                            </Button>
+                            </Button> : null
                         }
                         <Heading>{title}</Heading>
                     </div>
