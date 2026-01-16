@@ -1,0 +1,40 @@
+'use client';
+import Card from '@/components/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { client } from '@/lib/client';
+import { useMutation } from '@tanstack/react-query';
+import Link from 'next/link';
+import React, { useState } from 'react'
+
+type Props = {
+    discordId: string
+}
+
+const SettingsPageContent = ({ discordId: initialDiscordId }: Props) => {
+    const [discordId, setDiscordId] = useState(initialDiscordId);
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (discordId: string) => {
+            const res = await client.project.setDiscordID.$post({ discordId });
+            return await res.json();
+        }
+    })
+
+    return (
+        <Card className='max-w-xl w-full space-y-4'>
+            <div className="">
+                <Label>Discord ID</Label>
+                <Input className='mt-1' value={discordId} onChange={(e) => setDiscordId(e.target.value)} placeholder='Enter your Discord ID' />
+            </div>
+            <p className="mt-2 text-sm/6 text-gray-600">
+            Don't know how to find Discord ID?{" "}
+            <Link href={'#'} className='text-brand-600 hover:text-brand-500'>
+            Learn how to obtain it here
+            </Link>.
+            </p>
+        </Card>
+    )
+}
+
+export default SettingsPageContent
