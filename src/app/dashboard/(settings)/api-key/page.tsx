@@ -4,7 +4,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation';
 import React from 'react'
 import { Plan } from '@prisma/client';
-import SettingsPageContent from './settings-page-content';
+import ApiKeyPageContent from './api-key-page-content';
 
 type Props = {
     plan: Plan
@@ -29,7 +29,7 @@ const Page = async ({ plan }: Props) => {
     }
     return (
         <DashboardPage title='Account Settings'>
-            <SettingsPageContent discordId={user.discordId ?? ""} />
+            <ApiKeyPageContent apiKey={user.apiKey ?? ""}/>
         </DashboardPage>
     )
 }

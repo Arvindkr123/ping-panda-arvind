@@ -1,5 +1,6 @@
 'use client';
 import Card from '@/components/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { client } from '@/lib/client';
@@ -33,6 +34,13 @@ const SettingsPageContent = ({ discordId: initialDiscordId }: Props) => {
             Learn how to obtain it here
             </Link>.
             </p>
+            <div className="pt-4">
+                <Button onClick={()=>mutate(discordId)} disabled={isPending}>
+                    {
+                        isPending ? 'Saving...' :'Save Changes'
+                    }
+                </Button>
+            </div>
         </Card>
     )
 }
