@@ -1,8 +1,7 @@
 'use client'
 import { SignIn } from '@clerk/nextjs';
 import { useSearchParams } from 'next/navigation';
-import React, { ReactNode } from 'react'
-const Page = ({ children }: { children: ReactNode }) => {
+const Page = () => {
     const searchParams = useSearchParams();
     const intent = searchParams.get("intent");
     return (

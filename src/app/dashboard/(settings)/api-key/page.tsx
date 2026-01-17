@@ -6,11 +6,8 @@ import React from 'react'
 import { Plan } from '@prisma/client';
 import ApiKeyPageContent from './api-key-page-content';
 
-type Props = {
-    plan: Plan
-}
 
-const Page = async ({ plan }: Props) => {
+const Page = async () => {
     const auth = await currentUser();
 
     if (!auth) {

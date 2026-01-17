@@ -4,13 +4,9 @@ import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation';
 import { UpgradePageContent } from "./upgrade-page-content"
 import React from 'react'
-import { Plan } from '@prisma/client';
 
-type Props = {
-    plan: Plan
-}
 
-const Page = async ({ plan }: Props) => {
+const Page = async () => {
     const auth = await currentUser();
 
     if (!auth) {
@@ -29,7 +25,7 @@ const Page = async ({ plan }: Props) => {
     }
     return (
         <DashboardPage title='Pro Membership'>
-            <UpgradePageContent plan={plan}/>
+            <UpgradePageContent plan={user.plan}/>
         </DashboardPage>
     )
 }

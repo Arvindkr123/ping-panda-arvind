@@ -37,10 +37,7 @@ export const CategoryPageContent = ({ hasEvents: initialHasEvents, category }: C
         pageSize: limit
     })
 
-    if (!pollingData.hasEvents) {
-        return <EmptyCategoryPage categoryName={category.name} />
-    }
-
+   
     const { data, isFetching } = useQuery({
         queryKey: ["events", category.name, pagination.pageIndex, pagination.pageSize, activeTab],
         queryFn: async () => {
@@ -189,6 +186,11 @@ export const CategoryPageContent = ({ hasEvents: initialHasEvents, category }: C
             }
         }
     )
+
+    if (!pollingData.hasEvents) {
+        return <EmptyCategoryPage categoryName={category.name} />
+    }
+
 
     return <>
         <div className="space-y-6">
