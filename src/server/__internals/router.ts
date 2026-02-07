@@ -39,7 +39,7 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
   )
 
   Object.entries(obj).forEach(([key, operation]) => {
-    const path = `/${key}` as const
+    const path = `/${key}`
 
     const operationMiddlewares: MiddlewareHandler[] = operation.middlewares.map(
       (middleware) => {
@@ -63,71 +63,67 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
 
     if (operation.type === "query") {
       if (operation.schema) {
-        route.get(
-          path,
-          queryParsingMiddleware,
-          ...operationMiddlewares,
-          (c) => {
-            const ctx = c.get("__middleware_output") || {}
-            const parsedQuery = c.get("parsedQuery")
-
-            let input
-            try {
-              input = operation.schema?.parse(parsedQuery)
-            } catch (err) {
-              if (err instanceof ZodError) {
-                throw new HTTPException(400, {
-                  cause: err,
-                  message: err.message,
-                })
-              } else {
-                throw err
-              }
-            }
-
-            return operation.handler({ c, ctx, input })
-          }
-        )
-      } else {
-        route.get(path, ...operationMiddlewares, (c) => {
+        const handler = async (c: Context) => {
           const ctx = c.get("__middleware_output") || {}
+          const parsedQuery = c.get("parsedQuery")
 
-          return operation.handler({ c, ctx, input: undefined })
-        })
+          let input
+          try {
+            input = operation.schema?.parse(parsedQuery)
+          } catch (err) {
+            if (err instanceof ZodError) {
+              throw new HTTPException(400, {
+                cause: err,
+                message: err.message,
+              })
+            } else {
+              throw err
+            }
+          }
+
+          return await operation.handler({ c, ctx, input })
+        }
+
+        route.on(["GET"], [path], queryParsingMiddleware, ...operationMiddlewares, handler)
+      } else {
+        const handler = async (c: Context) => {
+          const ctx = c.get("__middleware_output") || {}
+          return await operation.handler({ c, ctx, input: undefined })
+        }
+
+        route.on(["GET"], [path], ...operationMiddlewares, handler)
       }
     } else if (operation.type === "mutation") {
       if (operation.schema) {
-        route.post(
-          path,
-          bodyParsingMiddleware,
-          ...operationMiddlewares,
-          (c) => {
-            const ctx = c.get("__middleware_output") || {}
-            const parsedBody = c.get("parsedBody")
-
-            let input
-            try {
-              input = operation.schema?.parse(parsedBody)
-            } catch (err) {
-              if (err instanceof ZodError) {
-                throw new HTTPException(400, {
-                  cause: err,
-                  message: err.message,
-                })
-              } else {
-                throw err
-              }
-            }
-
-            return operation.handler({ c, ctx, input })
-          }
-        )
-      } else {
-        route.post(path, ...operationMiddlewares, (c) => {
+        const handler = async (c: Context) => {
           const ctx = c.get("__middleware_output") || {}
+          const parsedBody = c.get("parsedBody")
 
-          return operation.handler({ c, ctx, input: undefined })
-        })
+          let input
+          try {
+            input = operation.schema?.parse(parsedBody)
+          } catch (err) {
+            if (err instanceof ZodError) {
+              throw new HTTPException(400, {
+                cause: err,
+                message: err.message,
+              })
+            } else {
+              throw err
+            }
+          }
+
+          return await operation.handler({ c, ctx, input })
+        }
+
+        route.on(["POST"], [path], bodyParsingMiddleware, ...operationMiddlewares, handler)
+      } else {
+        const handler = async (c: Context) => {
+          const ctx = c.get("__middleware_output") || {}
+          return await operation.handler({ c, ctx, input: undefined })
+        }
+
+        route.on(["POST"], [path], ...operationMiddlewares, handler)
       }
     }
   })
@@ -139,22 +135,22 @@ export const router = <T extends Record<string, OperationType<any, any>>>(
     { Bindings: Bindings; Variables: Variables },
     {
       [K in keyof T]: T[K] extends QueryOperation<any, any>
-        ? {
-            $get: {
-              input: InferInput<T[K]>
-              output: InferOutput<T[K]>
-              outputFormat: "json"
-              status: StatusCode
-            }
-          }
-        : {
-            $post: {
-              input: InferInput<T[K]>
-              output: InferOutput<T[K]>
-              outputFormat: "json"
-              status: StatusCode
-            }
-          }
+      ? {
+        $get: {
+          input: InferInput<T[K]>
+          output: InferOutput<T[K]>
+          outputFormat: "json"
+          status: StatusCode
+        }
+      }
+      : {
+        $post: {
+          input: InferInput<T[K]>
+          output: InferOutput<T[K]>
+          outputFormat: "json"
+          status: StatusCode
+        }
+      }
     }
   >
 }
